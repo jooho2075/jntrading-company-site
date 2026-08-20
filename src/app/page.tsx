@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Cog, Cookie, Globe, Handshake, Leaf, Stethoscope, Truck } from "lucide-react";
 
 const CATEGORIES = [
   {
@@ -8,8 +9,10 @@ const CATEGORIES = [
     description:
       "다양한 산업 분야에 필요한 정밀 기계 및 산업용 베어링 부품을 공급합니다.",
     href: "/business/bearing",
-    swatch: "bg-slate-200",
-    icon: <GearIcon />,
+    image: "/images/industry.png",
+    imageWidth: 594,
+    imageHeight: 188,
+    icon: <Cog className="h-6 w-6" strokeWidth={1.5} />,
   },
   {
     title: "의료기기",
@@ -17,8 +20,10 @@ const CATEGORIES = [
     description:
       "의료 현장에서 신뢰받는 품질의 의료기기 및 헬스케어 제품을 제공합니다.",
     href: "/business/medical",
-    swatch: "bg-sky-100",
-    icon: <MedicalIcon />,
+    image: "/images/medical.png",
+    imageWidth: 650,
+    imageHeight: 194,
+    icon: <Stethoscope className="h-6 w-6" strokeWidth={1.5} />,
   },
   {
     title: "한국산 칩스류",
@@ -26,8 +31,10 @@ const CATEGORIES = [
     description:
       "한국의 우수한 품질을 자랑하는 스낵 제품을 해외 시장에 공급합니다.",
     href: "/business/snacks",
-    swatch: "bg-amber-100",
-    icon: <ChipIcon />,
+    image: "/images/kor_chips.png",
+    imageWidth: 642,
+    imageHeight: 186,
+    icon: <Cookie className="h-6 w-6" strokeWidth={1.5} />,
   },
   {
     title: "해외 유기농 비누",
@@ -35,62 +42,30 @@ const CATEGORIES = [
     description:
       "자연 친화적이고 안전한 유기농 비누 제품을 글로벌 시장에 소개합니다.",
     href: "/business/soap",
-    swatch: "bg-emerald-100",
-    icon: <LeafIcon />,
+    image: "/images/organic_soap.png",
+    imageWidth: 630,
+    imageHeight: 186,
+    icon: <Leaf className="h-6 w-6" strokeWidth={1.5} />,
   },
 ];
 
-function GearIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2 5.6 5.6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function MedicalIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ChipIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <rect x="7" y="7" width="10" height="10" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M7 4v2M12 4v2M17 4v2M7 18v2M12 18v2M17 18v2M4 7h2M4 12h2M4 17h2M18 7h2M18 12h2M18 17h2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function LeafIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-      <path
-        d="M5 19c8 0 14-6 14-14-8 0-14 6-14 14Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <path d="M5 19c0-5 2-8 6-10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
+const SOURCING_POINTS = [
+  {
+    title: "글로벌 네트워크",
+    description: "아시아 · 유럽 · 미주 등",
+    icon: <Globe className="h-5 w-5" strokeWidth={1.5} />,
+  },
+  {
+    title: "신뢰와 협력",
+    description: "장기적 파트너십 구축",
+    icon: <Handshake className="h-5 w-5" strokeWidth={1.5} />,
+  },
+  {
+    title: "안정적 공급",
+    description: "신속하고 정확한 물류",
+    icon: <Truck className="h-5 w-5" strokeWidth={1.5} />,
+  },
+];
 
 export default function Home() {
   return (
@@ -156,10 +131,15 @@ export default function Home() {
               href={category.href}
               className="group overflow-hidden rounded-xl border border-slate-100 shadow-sm transition-shadow hover:shadow-md"
             >
-              <div className={`flex h-40 items-center justify-center ${category.swatch} text-[#1e2a6e]/60`}>
-                <span className="h-12 w-12 [&>svg]:h-full [&>svg]:w-full">
-                  {category.icon}
-                </span>
+              <div className="flex items-center justify-center bg-slate-100">
+                <Image
+                  src={category.image}
+                  alt={category.title}
+                  width={category.imageWidth}
+                  height={category.imageHeight}
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  className="h-auto w-full"
+                />
               </div>
               <div className="p-4">
                 <p className="font-bold text-[#1e2a6e]">{category.title}</p>
@@ -170,6 +150,62 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="pb-16">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div className="flex flex-col gap-6 rounded-2xl bg-[#eef4fc] p-8 sm:flex-row sm:items-center">
+            <Handshake className="h-16 w-16 shrink-0 text-[#1e2a6e]" strokeWidth={1.5} />
+            <div>
+              <h2 className="text-xl font-extrabold text-[#1e2a6e] sm:text-2xl">
+                About JN TRADING CO., LTD.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-700">
+                JN TRADING CO., LTD.는 한국을 기반으로 글로벌 시장을 대상으로
+                산업기계, 산업장비, 의료기기 및 소비재(칩스류, 유기농 비누 등)를
+                소싱·유통하는 무역 전문 기업입니다.
+                <br />
+                <br />
+                신뢰할 수 있는 제조사 및 비즈니스 파트너와의 협력을 통해
+                고객의 요구에 맞는 우수한 제품을 글로벌 시장에 제공합니다.
+              </p>
+              <Link
+                href="/about"
+                className="mt-5 inline-flex items-center gap-2 rounded-md bg-[#1e2a6e] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#16215a]"
+              >
+                회사소개 더보기
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#eef4fc] p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+              <Globe className="h-16 w-16 shrink-0 text-[#1e2a6e]" strokeWidth={1.5} />
+              <div>
+                <h2 className="text-xl font-extrabold text-[#1e2a6e] sm:text-2xl">
+                  Global Sourcing
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-slate-700">
+                  전 세계 우수 제조사와의 네트워크를 바탕으로 고객이 필요로
+                  하는 제품을 맞춤형으로 소싱하고, 안정적인 공급과
+                  파트너십을 제공합니다.
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              {SOURCING_POINTS.map((point) => (
+                <div key={point.title} className="flex flex-col items-center text-center">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#1e2a6e]">
+                    {point.icon}
+                  </span>
+                  <p className="mt-2 text-sm font-bold text-[#1e2a6e]">{point.title}</p>
+                  <p className="mt-1 text-xs text-slate-500">{point.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </div>
