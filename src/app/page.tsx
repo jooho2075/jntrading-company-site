@@ -114,11 +114,13 @@ export default function Home() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-left"
           />
           <div className="absolute inset-0 flex items-center">
             <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-              <HeroCopy compact />
+              <div className="max-w-xl rounded-lg bg-white/85 p-3 backdrop-blur-sm">
+                <HeroCopy compact />
+              </div>
             </div>
           </div>
         </div>
