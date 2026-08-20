@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JN TRADING CO., LTD. — Company Site
 
-## Getting Started
+JN TRADING CO., LTD.의 공식 홈페이지입니다. 산업기계/베어링류, 의료기기, 한국산 스낵, 해외 유기농 비누 등을 소싱·유통하는 무역 전문 기업 소개 사이트입니다.
 
-First, run the development server:
+- **운영 사이트**: `jntrading.kr` (DNS 연결 진행 중)
+- **임시 배포 주소**: https://jntrading-company-site.vercel.app
+
+## 기술 스택
+
+| 영역 | 사용 기술 | 버전 |
+| --- | --- | --- |
+| 프레임워크 | [Next.js](https://nextjs.org) (App Router, Turbopack) | 16.3.1 |
+| 언어 | TypeScript | ^5 |
+| UI 라이브러리 | React / React DOM | 19.2.8 |
+| 스타일링 | Tailwind CSS | ^4 |
+| 아이콘 | [lucide-react](https://lucide.dev) | ^1.33.0 |
+| 백엔드/인증 | [Supabase](https://supabase.com) (`@supabase/ssr`, `@supabase/supabase-js`) | ^0.12.4 / ^2.112.3 |
+| 배포 | Vercel | - |
+
+> **참고**: 이 프로젝트의 Next.js 버전은 기존에 알려진 컨벤션과 다른 부분(예: `middleware.ts` → `proxy.ts` 이름 변경)이 있습니다. 새 코드를 작성하기 전에 `node_modules/next/dist/docs/`의 문서를 확인하세요 (자세한 내용은 [AGENTS.md](./AGENTS.md) 참고).
+
+## 폴더 구조
+
+```
+jntrading-company-site/
+├─ public/
+│  └─ images/              # 정적 이미지 (로고, 히어로 배너, 제품 사진 등)
+│     ├─ logo.png
+│     ├─ home_image1.png   # 홈페이지 히어로 배너
+│     ├─ industry.png      # 산업기계/베어링류 카드 이미지
+│     ├─ medical.png       # 의료기기 카드 이미지
+│     ├─ kor_chips.png     # 한국산 칩스류 카드 이미지
+│     ├─ organic_soap.png  # 해외 유기농 비누 카드 이미지
+│     └─ globe.svg
+├─ src/
+│  ├─ app/
+│  │  ├─ layout.tsx        # 루트 레이아웃 (Header/Footer 공통 적용, 폰트/메타데이터)
+│  │  ├─ page.tsx          # 홈페이지 (히어로, 카테고리 카드, About/Global Sourcing)
+│  │  ├─ globals.css       # Tailwind 진입점, 전역 CSS 변수
+│  │  └─ favicon.ico
+│  ├─ components/
+│  │  └─ layout/
+│  │     ├─ Header.tsx     # 상단 네비게이션 (로고, 메뉴, 언어 전환, 모바일 메뉴)
+│  │     └─ Footer.tsx     # 하단 바 (이메일/전화/팩스/주소, 저작권)
+│  ├─ lib/
+│  │  └─ supabase/
+│  │     ├─ client.ts      # 브라우저(클라이언트 컴포넌트)용 Supabase 클라이언트
+│  │     ├─ server.ts      # 서버 컴포넌트/서버 액션용 Supabase 클라이언트
+│  │     └─ middleware.ts  # 요청마다 Supabase 세션을 갱신 (proxy.ts에서 호출)
+│  └─ proxy.ts              # Next.js 16의 Proxy(구 middleware) — 모든 요청에서 세션 갱신
+├─ .env.local               # 로컬 환경변수 (git 미포함)
+├─ .env.local.example       # 환경변수 템플릿
+├─ next.config.ts
+├─ tsconfig.json
+├─ eslint.config.mjs
+└─ package.json
+```
+
+## 시작하기
+
+### 1. 의존성 설치
+
+```bash
+npm install
+```
+
+### 2. 환경변수 설정
+
+`.env.local.example`을 복사해 `.env.local`을 만들고, Supabase 프로젝트 값을 채워주세요.
+
+```bash
+cp .env.local.example .env.local
+```
+
+| 변수명 | 설명 |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable(anon) key |
+
+> `NEXT_PUBLIC_` 접두사가 붙은 값은 브라우저에 노출되는 공개 값입니다. 민감한 서비스 키는 별도로 관리하세요.
+
+### 3. 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000)에서 확인할 수 있습니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 기타 스크립트
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # 프로덕션 빌드
+npm run start   # 빌드된 결과 실행
+npm run lint    # ESLint 검사
+```
 
-## Learn More
+## 브랜치 전략
 
-To learn more about Next.js, take a look at the following resources:
+- `main` — 배포(운영) 기준 브랜치. Vercel Production이 이 브랜치를 추적합니다.
+- `develop` — 기능 개발 브랜치. 작업 완료 후 PR을 통해 `main`으로 머지합니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 배포
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **호스팅**: [Vercel](https://vercel.com) — GitHub 저장소(`jooho2075/jntrading-company-site`)와 연동, `main` 브랜치 push 시 자동 배포
+- **환경변수**: Vercel 프로젝트 → Settings → Environments(Production)에 `.env.local`과 동일한 키 등록 필요 (변경 시 재배포 필요 — `NEXT_PUBLIC_*` 값은 빌드 타임에 번들에 포함됨)
+- **커스텀 도메인**: `jntrading.kr` (가비아 등록) → Vercel Settings → Domains에서 연결, 가비아 DNS에 Vercel이 안내하는 A/CNAME 레코드 등록
