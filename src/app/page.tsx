@@ -118,7 +118,7 @@ export default function Home() {
           />
           <div className="absolute inset-0 flex items-center">
             <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-              <div className="max-w-xl rounded-lg bg-white/85 p-3 backdrop-blur-sm">
+              <div className="inline-block max-w-xl rounded-lg bg-white/85 p-2.5 backdrop-blur-sm">
                 <HeroCopy compact />
               </div>
             </div>
