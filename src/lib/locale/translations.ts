@@ -16,9 +16,12 @@ export const dictionary = {
   },
   footer: {
     address: {
-      ko: "경기도 부천시 도약로 261, A동 1201호(도당동, 부천대우테크노파크)",
-      en: "1201, A-dong, 261 Doyak-ro, Bucheon-si, Gyeonggi-do, Korea (Bucheon Daewoo Techno Park)",
+      ko: "경기도 부천시 도약로 261, A동 1201호(도당동, 부천대우테크노파크) 14523",
+      en: "1201, A-dong, 261 Doyak-ro, Wonmi-gu, Bucheon-si, Gyeonggi-do 14523, Republic of Korea",
     },
+    // 한국어에서는 국내에서 통용되는 표기(0으로 시작)를, 영어에서는 해외 발신자를 위해
+    // 국가번호(+82)를 붙이고 지역번호 앞자리 0을 뗀 국제 표기를 사용한다.
+    phone: { ko: "010-7684-1182 | 032-670-8284", en: "+82-10-7684-1182 | +82-32-670-8284" },
     fax: { ko: "FAX 032-670-8984", en: "FAX +82-32-670-8984" },
   },
   home: {

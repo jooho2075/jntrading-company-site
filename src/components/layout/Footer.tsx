@@ -76,8 +76,8 @@ export default function Footer() {
           </li>
           <li className="flex items-center gap-2">
             <PhoneIcon />
-            <a href="tel:+82-2-0000-0000" className="hover:text-white">
-              010-7684-1182 | 032-670-8284
+            <a href="tel:+82-10-7684-1182" className="hover:text-white">
+              {dictionary.footer.phone[locale]}
             </a>
           </li>
           <li className="flex items-center gap-2">
