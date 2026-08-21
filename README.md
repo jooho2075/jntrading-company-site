@@ -134,6 +134,8 @@ Header 우측의 "한국어 | English" 토글로 사이트 텍스트를 즉시 �
 
 ### 커스텀 도메인 연결 (가비아 → Vercel)
 
+📄 [Gabia DNS Setting Manual (PDF)](./docs/gabia-dns-setting-manual.pdf) — 아래 절차를 스크린샷과 함께 정리한 문서입니다.
+
 도메인(`jntrading.kr`)은 가비아에서 등록했고, 네임서버는 가비아 기본값(`ns.gabia.co.kr`)을 그대로 사용합니다. 즉 가비아 "DNS 관리"에서 레코드만 추가하면 되는 가장 단순한 구성입니다.
 
 1. **Vercel에서 도메인 추가**: 프로젝트 → Settings → Domains → `jntrading.kr`, `www.jntrading.kr` 추가. 추가하면 Vercel이 필요한 A/CNAME 값을 화면에 안내해줍니다.
