@@ -4,16 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useLocale } from "@/lib/locale/LocaleContext";
+import { dictionary } from "@/lib/locale/translations";
+
+type NavId = keyof typeof dictionary.header.nav;
+
+type NavItem = {
+  id: NavId;
+  href?: string;
+};
 
 // TODO: 아래 페이지들이 아직 만들어지지 않아 404가 발생하므로,
 // 페이지가 준비될 때까지 href를 주석 처리하고 클릭해도 이동하지 않도록 처리함.
-const NAV_ITEMS = [
-  { label: "Home", href: "/" },
-  { label: "회사소개", href: /* "/about" */ undefined },
-  { label: "사업분야", href: /* "/business" */ undefined },
-  { label: "취급제품", href: /* "/products" */ undefined },
-  { label: "글로벌 소싱", href: /* "/sourcing" */ undefined },
-  { label: "문의하기", href: /* "/contact" */ undefined },
+const NAV_ITEMS: NavItem[] = [
+  { id: "home", href: "/" },
+  { id: "about", href: /* "/about" */ undefined },
+  { id: "business", href: /* "/business" */ undefined },
+  { id: "products", href: /* "/products" */ undefined },
+  { id: "sourcing", href: /* "/sourcing" */ undefined },
+  { id: "contact", href: /* "/contact" */ undefined },
 ];
 
 function GlobeIcon() {
@@ -32,18 +41,18 @@ function GlobeIcon() {
 
 export default function Header() {
   const pathname = usePathname();
+  const { locale, setLocale } = useLocale();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [locale, setLocale] = useState<"ko" | "en">("ko");
   // 아직 페이지가 없는 메뉴를 클릭했을 때도 Home처럼 밑줄/색상이 바뀌도록
   // 실제 라우팅과 별개로 "선택된 메뉴"만 로컬로 추적한다.
-  const [clickedLabel, setClickedLabel] = useState<string | null>(null);
+  const [clickedId, setClickedId] = useState<string | null>(null);
 
   // 실제 페이지 이동(pathname 변경)이 일어나면 클릭 상태를 초기화해
   // 현재 경로 기준의 활성 표시로 되돌린다. (렌더 중 상태 조정 패턴)
   const [prevPathname, setPrevPathname] = useState(pathname);
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
-    setClickedLabel(null);
+    setClickedId(null);
   }
 
   return (
@@ -65,10 +74,11 @@ export default function Header() {
 
         <nav className="hidden items-center gap-8 lg:flex">
           {NAV_ITEMS.map((item) => {
+            const label = dictionary.header.nav[item.id][locale];
             const isActive =
               item.href === undefined
-                ? clickedLabel === item.label
-                : clickedLabel === null &&
+                ? clickedId === item.id
+                : clickedId === null &&
                   (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
 
             const linkClassName = `relative py-1 text-sm font-medium transition-colors ${
@@ -78,12 +88,12 @@ export default function Header() {
             if (item.href === undefined) {
               return (
                 <button
-                  key={item.label}
+                  key={item.id}
                   type="button"
-                  onClick={() => setClickedLabel(item.label)}
+                  onClick={() => setClickedId(item.id)}
                   className={linkClassName}
                 >
-                  {item.label}
+                  {label}
                   {isActive && (
                     <span className="absolute -bottom-[1px] left-0 h-0.5 w-full bg-[#1e2a6e]" />
                   )}
@@ -93,12 +103,12 @@ export default function Header() {
 
             return (
               <Link
-                key={item.href}
+                key={item.id}
                 href={item.href}
-                onClick={() => setClickedLabel(null)}
+                onClick={() => setClickedId(null)}
                 className={linkClassName}
               >
-                {item.label}
+                {label}
                 {isActive && (
                   <span className="absolute -bottom-[1px] left-0 h-0.5 w-full bg-[#1e2a6e]" />
                 )}
@@ -131,7 +141,7 @@ export default function Header() {
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             className="flex h-9 w-9 items-center justify-center rounded-md text-slate-700 lg:hidden"
-            aria-label="메뉴 열기"
+            aria-label={dictionary.header.menuOpenLabel[locale]}
             aria-expanded={menuOpen}
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
@@ -159,10 +169,11 @@ export default function Header() {
         <nav className="border-t border-slate-100 bg-white px-4 pb-4 pt-2 lg:hidden">
           <ul className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => {
+              const label = dictionary.header.nav[item.id][locale];
               const isActive =
                 item.href === undefined
-                  ? clickedLabel === item.label
-                  : clickedLabel === null &&
+                  ? clickedId === item.id
+                  : clickedId === null &&
                     (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
 
               const itemClassName = `block w-full rounded-md px-3 py-2 text-left text-sm font-medium ${
@@ -171,32 +182,32 @@ export default function Header() {
 
               if (item.href === undefined) {
                 return (
-                  <li key={item.label}>
+                  <li key={item.id}>
                     <button
                       type="button"
                       onClick={() => {
-                        setClickedLabel(item.label);
+                        setClickedId(item.id);
                         setMenuOpen(false);
                       }}
                       className={itemClassName}
                     >
-                      {item.label}
+                      {label}
                     </button>
                   </li>
                 );
               }
 
               return (
-                <li key={item.href}>
+                <li key={item.id}>
                   <Link
                     href={item.href}
                     onClick={() => {
-                      setClickedLabel(null);
+                      setClickedId(null);
                       setMenuOpen(false);
                     }}
                     className={itemClassName}
                   >
-                    {item.label}
+                    {label}
                   </Link>
                 </li>
               );

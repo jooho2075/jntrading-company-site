@@ -1,3 +1,8 @@
+"use client";
+
+import { useLocale } from "@/lib/locale/LocaleContext";
+import { dictionary } from "@/lib/locale/translations";
+
 function MailIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden="true">
@@ -57,6 +62,7 @@ function PinIcon() {
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { locale } = useLocale();
 
   return (
     <footer className="bg-[#0f1b4d] text-slate-200">
@@ -76,11 +82,11 @@ export default function Footer() {
           </li>
           <li className="flex items-center gap-2">
             <PinIcon />
-            <span>경기도 부천시 도약로 261, A동 1201호(도당동, 부천대우테크노파크)</span>
+            <span>{dictionary.footer.address[locale]}</span>
           </li>
           <li className="flex items-center gap-2">
             <FaxIcon />
-            <span>FAX 032-670-8984</span>
+            <span>{dictionary.footer.fax[locale]}</span>
           </li>
         </ul>
 
