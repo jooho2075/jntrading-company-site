@@ -43,6 +43,9 @@ jntrading-company-site/
 │  │     ├─ Header.tsx     # 상단 네비게이션 (로고, 메뉴, 언어 전환, 모바일 메뉴)
 │  │     └─ Footer.tsx     # 하단 바 (이메일/전화/팩스/주소, 저작권)
 │  ├─ lib/
+│  │  ├─ locale/
+│  │  │  ├─ LocaleContext.tsx  # ko/en 언어 상태 Context + localStorage 동기화
+│  │  │  └─ translations.ts    # Header/Footer/홈 화면 한국어·영어 번역 사전
 │  │  └─ supabase/
 │  │     ├─ client.ts      # 브라우저(클라이언트 컴포넌트)용 Supabase 클라이언트
 │  │     ├─ server.ts      # 서버 컴포넌트/서버 액션용 Supabase 클라이언트
@@ -94,6 +97,30 @@ npm run build   # 프로덕션 빌드
 npm run start   # 빌드된 결과 실행
 npm run lint    # ESLint 검사
 ```
+
+## 현재 진행 상황
+
+### 1. 다국어(한국어/영어) 전환
+
+Header 우측의 "한국어 | English" 토글로 사이트 텍스트를 즉시 전환할 수 있습니다.
+
+- `LocaleProvider`([src/lib/locale/LocaleContext.tsx](./src/lib/locale/LocaleContext.tsx))가 앱 전체를 감싸 언어 상태(`ko`/`en`)를 공유합니다. 선택한 언어는 `localStorage`에 저장되어 새로고침·재방문 시에도 유지됩니다.
+- 번역 문구는 [src/lib/locale/translations.ts](./src/lib/locale/translations.ts) 한 곳에 모여 있으며, Header 메뉴/Footer 주소·팩스/홈 화면(히어로, 사업 카테고리 4종, 회사소개, 글로벌 소싱) 텍스트를 포함합니다.
+- 이메일·전화번호·저작권 표기처럼 언어와 무관한 값은 번역 대상에서 제외했습니다.
+- 모바일(640px 미만)에서는 상단바 대신 햄버거 메뉴를 펼쳤을 때 언어 토글이 표시됩니다.
+
+### 2. 아직 만들어지지 않은 페이지 임시 처리
+
+`/about`, `/business`, `/products`, `/sourcing`, `/contact`와 사업 카테고리 상세 페이지(`/business/bearing`, `/business/medical`, `/business/snacks`, `/business/soap`)는 아직 실제 라우트가 없어 접속 시 404가 발생합니다. 페이지가 준비되기 전까지 **클릭해도 이동하지 않도록** `href`를 주석 처리하고, `Link` 대신 `button`/`div`로 임시 대체해 두었습니다.
+
+| 위치 | 항목 | 비고 |
+| --- | --- | --- |
+| [Header.tsx](./src/components/layout/Header.tsx) `NAV_ITEMS` | 회사소개 · 사업분야 · 취급제품 · 글로벌 소싱 · 문의하기 | 클릭 시 Home과 동일한 밑줄/색상 강조는 유지 |
+| [page.tsx](./src/app/page.tsx) `CATEGORIES` | 산업기계/베어링류 · 의료기기 · 한국산 칩스류 · 해외 유기농 비누 카드 | |
+| [page.tsx](./src/app/page.tsx) 히어로 CTA | "문의하기" 버튼 (`/contact`) | |
+| [page.tsx](./src/app/page.tsx) About 섹션 | "회사소개 더보기" 버튼 (`/about`) | |
+
+**해당 페이지가 만들어지면**: 각 위치의 `href: /* "/경로" */ undefined` 또는 `// href="/경로"` 주석을 해제하면 자동으로 `Link`로 되돌아가 정상적으로 페이지 이동이 이루어집니다.
 
 ## 브랜치 전략
 
