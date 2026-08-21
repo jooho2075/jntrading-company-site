@@ -5,13 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+// TODO: 아래 페이지들이 아직 만들어지지 않아 404가 발생하므로,
+// 페이지가 준비될 때까지 href를 주석 처리하고 클릭해도 이동하지 않도록 처리함.
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
-  { label: "회사소개", href: "/about" },
-  { label: "사업분야", href: "/business" },
-  { label: "취급제품", href: "/products" },
-  { label: "글로벌 소싱", href: "/sourcing" },
-  { label: "문의하기", href: "/contact" },
+  { label: "회사소개", href: /* "/about" */ undefined },
+  { label: "사업분야", href: /* "/business" */ undefined },
+  { label: "취급제품", href: /* "/products" */ undefined },
+  { label: "글로벌 소싱", href: /* "/sourcing" */ undefined },
+  { label: "문의하기", href: /* "/contact" */ undefined },
 ];
 
 function GlobeIcon() {
@@ -32,6 +34,17 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [locale, setLocale] = useState<"ko" | "en">("ko");
+  // 아직 페이지가 없는 메뉴를 클릭했을 때도 Home처럼 밑줄/색상이 바뀌도록
+  // 실제 라우팅과 별개로 "선택된 메뉴"만 로컬로 추적한다.
+  const [clickedLabel, setClickedLabel] = useState<string | null>(null);
+
+  // 실제 페이지 이동(pathname 변경)이 일어나면 클릭 상태를 초기화해
+  // 현재 경로 기준의 활성 표시로 되돌린다. (렌더 중 상태 조정 패턴)
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setClickedLabel(null);
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white">
@@ -53,16 +66,37 @@ export default function Header() {
         <nav className="hidden items-center gap-8 lg:flex">
           {NAV_ITEMS.map((item) => {
             const isActive =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              item.href === undefined
+                ? clickedLabel === item.label
+                : clickedLabel === null &&
+                  (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
+
+            const linkClassName = `relative py-1 text-sm font-medium transition-colors ${
+              isActive ? "text-[#1e2a6e]" : "text-slate-700 hover:text-[#1e2a6e]"
+            }`;
+
+            if (item.href === undefined) {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setClickedLabel(item.label)}
+                  className={linkClassName}
+                >
+                  {item.label}
+                  {isActive && (
+                    <span className="absolute -bottom-[1px] left-0 h-0.5 w-full bg-[#1e2a6e]" />
+                  )}
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative py-1 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "text-[#1e2a6e]"
-                    : "text-slate-700 hover:text-[#1e2a6e]"
-                }`}
+                onClick={() => setClickedLabel(null)}
+                className={linkClassName}
               >
                 {item.label}
                 {isActive && (
@@ -126,17 +160,41 @@ export default function Header() {
           <ul className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => {
               const isActive =
-                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                item.href === undefined
+                  ? clickedLabel === item.label
+                  : clickedLabel === null &&
+                    (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
+
+              const itemClassName = `block w-full rounded-md px-3 py-2 text-left text-sm font-medium ${
+                isActive ? "bg-slate-50 text-[#1e2a6e]" : "text-slate-700 hover:bg-slate-50"
+              }`;
+
+              if (item.href === undefined) {
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setClickedLabel(item.label);
+                        setMenuOpen(false);
+                      }}
+                      className={itemClassName}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                );
+              }
+
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`block rounded-md px-3 py-2 text-sm font-medium ${
-                      isActive
-                        ? "bg-slate-50 text-[#1e2a6e]"
-                        : "text-slate-700 hover:bg-slate-50"
-                    }`}
+                    onClick={() => {
+                      setClickedLabel(null);
+                      setMenuOpen(false);
+                    }}
+                    className={itemClassName}
                   >
                     {item.label}
                   </Link>
