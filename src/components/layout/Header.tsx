@@ -167,6 +167,26 @@ export default function Header() {
 
       {menuOpen && (
         <nav className="border-t border-slate-100 bg-white px-4 pb-4 pt-2 lg:hidden">
+          {/* sm 이상에서는 상단바의 언어 토글이 보이므로 여기서는 숨긴다. */}
+          <div className="mb-2 flex items-center gap-1 rounded-full bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 sm:hidden">
+            <GlobeIcon />
+            <button
+              type="button"
+              onClick={() => setLocale("ko")}
+              className={locale === "ko" ? "text-[#1e2a6e]" : "text-slate-500"}
+            >
+              한국어
+            </button>
+            <span className="text-slate-300">|</span>
+            <button
+              type="button"
+              onClick={() => setLocale("en")}
+              className={locale === "en" ? "text-[#1e2a6e]" : "text-slate-500"}
+            >
+              English
+            </button>
+          </div>
+
           <ul className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => {
               const label = dictionary.header.nav[item.id][locale];
