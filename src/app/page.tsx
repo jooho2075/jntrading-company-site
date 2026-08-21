@@ -159,10 +159,8 @@ export default function Home() {
                   {category.icon}
                 </span>
                 <div>
-                  <p className="font-bold text-[#1e2a6e] lg:whitespace-nowrap">{text.title[locale]}</p>
-                  <p className="mt-1 text-sm text-slate-500 lg:whitespace-nowrap lg:text-xs">
-                    {text.blurb[locale]}
-                  </p>
+                  <p className="font-bold text-[#1e2a6e]">{text.title[locale]}</p>
+                  <p className="mt-1 text-sm text-slate-500 lg:text-xs">{text.blurb[locale]}</p>
                 </div>
               </div>
             );

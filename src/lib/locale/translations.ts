@@ -17,7 +17,7 @@ export const dictionary = {
   footer: {
     address: {
       ko: "경기도 부천시 도약로 261, A동 1201호(도당동, 부천대우테크노파크) 14523",
-      en: "1201, A-dong, 261 Doyak-ro, Wonmi-gu, Bucheon-si, Gyeonggi-do 14523, Republic of Korea",
+      en: "A-1201, 261 Doyak-ro, Bucheon-si, Gyeonggi-do, 14523, Korea",
     },
     // 한국어에서는 국내에서 통용되는 표기(0으로 시작)를, 영어에서는 해외 발신자를 위해
     // 국가번호(+82)를 붙이고 지역번호 앞자리 0을 뗀 국제 표기를 사용한다.
