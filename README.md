@@ -2,7 +2,7 @@
 
 JN TRADING CO., LTD.의 공식 홈페이지입니다. 산업기계/베어링류, 의료기기, 한국산 스낵, 해외 유기농 비누 등을 소싱·유통하는 무역 전문 기업 소개 사이트입니다.
 
-- **운영 사이트**: `jntrading.kr` (DNS 연결 진행 중)
+- **운영 사이트**: `jntrading.kr` / `www.jntrading.kr` (DNS 연결 완료)
 - **임시 배포 주소**: https://jntrading-company-site.vercel.app
 
 ## 기술 스택
@@ -131,4 +131,24 @@ Header 우측의 "한국어 | English" 토글로 사이트 텍스트를 즉시 �
 
 - **호스팅**: [Vercel](https://vercel.com) — GitHub 저장소(`jooho2075/jntrading-company-site`)와 연동, `main` 브랜치 push 시 자동 배포
 - **환경변수**: Vercel 프로젝트 → Settings → Environments(Production)에 `.env.local`과 동일한 키 등록 필요 (변경 시 재배포 필요 — `NEXT_PUBLIC_*` 값은 빌드 타임에 번들에 포함됨)
-- **커스텀 도메인**: `jntrading.kr` (가비아 등록) → Vercel Settings → Domains에서 연결, 가비아 DNS에 Vercel이 안내하는 A/CNAME 레코드 등록
+
+### 커스텀 도메인 연결 (가비아 → Vercel)
+
+도메인(`jntrading.kr`)은 가비아에서 등록했고, 네임서버는 가비아 기본값(`ns.gabia.co.kr`)을 그대로 사용합니다. 즉 가비아 "DNS 관리"에서 레코드만 추가하면 되는 가장 단순한 구성입니다.
+
+1. **Vercel에서 도메인 추가**: 프로젝트 → Settings → Domains → `jntrading.kr`, `www.jntrading.kr` 추가. 추가하면 Vercel이 필요한 A/CNAME 값을 화면에 안내해줍니다.
+2. **가비아에서 DNS 레코드 등록**: My가비아 → 이용중인 서비스 → 도메인 → `jntrading.kr` [관리] → **DNS 관리** → 해당 도메인 [설정] → **레코드 수정**에서 아래 2개를 추가:
+
+   | 타입 | 호스트 | 값/위치 | TTL |
+   | --- | --- | --- | --- |
+   | A | `@` | Vercel이 안내한 IP (예: `216.198.79.1`) | 600 |
+   | CNAME | `www` | `cname.vercel-dns.com.` (**마지막 점 필수**) | 600 |
+
+   > A 레코드는 apex 도메인(`jntrading.kr` 자체)을 IP에 직접 연결하고, CNAME은 서브도메인(`www`)을 Vercel이 관리하는 이름에 연결합니다. apex에는 CNAME을 쓸 수 없어 A 레코드로만 등록합니다.
+   > 가비아는 CNAME 값 끝에 점(`.`)이 없으면 "CNAME타입의 '값/위치'는 점(.)으로 끝나야 합니다" 에러로 저장이 거부됩니다.
+
+3. **전파 대기**: 저장 후 보통 몇 분~몇 시간, 최대 24~48시간 소요. `dig jntrading.kr` 또는 https://dnschecker.org 로 확인 가능.
+4. **Vercel에서 확인**: Domains 화면의 상태가 "Valid Configuration"/Ready로 바뀌면 SSL 인증서가 자동 발급됩니다.
+5. **동작 확인**: `jntrading.kr`(apex)은 `www.jntrading.kr`로 308 리다이렉트되고, 두 주소 모두 정상 접속됩니다.
+
+> 호스팅을 Vercel이 아닌 다른 서비스로 옮기게 되면, CNAME 값도 그 서비스가 안내하는 값으로 다시 바꿔야 합니다.
